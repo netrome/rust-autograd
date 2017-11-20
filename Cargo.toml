@@ -1,0 +1,7 @@
+[package]
+name = "gradground"
+version = "0.1.0"
+authors = ["Marten <marten3@kth.se>"]
+
+[dependencies]
+num = "0.1.40"
