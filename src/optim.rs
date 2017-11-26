@@ -20,6 +20,7 @@ impl Optimizer for SGD{
         for var in self.variables.iter(){
             let new_val = var.val() - var.grad() * self.rate;
             var.write(new_val);
+            var.write_grad(0.0);
         }
     }
 }
