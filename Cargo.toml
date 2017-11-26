@@ -1,5 +1,5 @@
 [package]
-name = "gradground"
+name = "floatgrad"
 version = "0.1.0"
 authors = ["Marten <marten3@kth.se>"]
 
