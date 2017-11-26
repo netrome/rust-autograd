@@ -9,6 +9,12 @@ pub struct SGD{
     variables: Vec<Variable>,
 }
 
+impl SGD{
+    pub fn new(rate: f32, var: Vec<Variable>){
+        SGD{rate:rate, variables:var}
+    }
+}
+
 impl Optimizer for SGD{
     fn update_variables(&self){
         for var in self.variables.iter(){
