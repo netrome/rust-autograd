@@ -22,16 +22,20 @@ impl Variable{
 
     fn from_data(data: VariableData) -> Self { Variable{ data: Arc::new(Mutex::new(data)) } }
 
+    pub fn from_vec(vec: Vec<f32>) -> Vec<Variable>{
+        vec.iter().map(|i| Self::new(*i)).collect()
+    }
+
     pub fn val(&self) -> f32{ self.data.lock().unwrap().val }
     pub fn grad(&self) -> f32{ self.data.lock().unwrap().grad }
-    pub fn write(&mut self, val: f32){ self.data.lock().unwrap().val = val }
-    pub fn write_grad(&mut self, val: f32){ self.data.lock().unwrap().grad = val }
+    pub fn write(&self, val: f32){ self.data.lock().unwrap().val = val }
+    pub fn write_grad(&self, val: f32){ self.data.lock().unwrap().grad = val }
 
-    pub fn backward(&mut self){
+    pub fn backward(&self){
         self.write_grad(1.0);
         self.data.lock().unwrap().chain();
     }
-    pub fn zero_grad(&mut self){
+    pub fn zero_grad(&self){
         self.write_grad(0.0);
         self.data.lock().unwrap().chain_zero();
     }
@@ -142,7 +146,7 @@ impl<'a> ops::Div for &'a Variable{
     type Output = Variable;
     fn div(self, other: &'a Variable) -> Variable{
         let first = (self.data.clone(), 1.0/other.val());
-        let second = (other.data.clone(), self.val()/(other.val()*other.val()));
+        let second = (other.data.clone(), -self.val()/(other.val()*other.val()));
         let data = VariableData{ val: self.val() / other.val(), grad: 0.0, parents: vec![first, second] };
         Variable::from_data(data)
     }
@@ -160,7 +164,7 @@ impl<'a> ops::Div<f32> for &'a Variable{
 impl<'a> ops::Div<&'a Variable> for f32{
     type Output = Variable;
     fn div(self, other: &'a Variable) -> Variable{
-        let first = (other.data.clone(), 1./(other.val() * other.val()));
+        let first = (other.data.clone(), -1./(other.val() * other.val()));
         let data = VariableData{ val: self / other.val(), grad: 0.0, parents: vec![first] };
         Variable::from_data(data)
     }
