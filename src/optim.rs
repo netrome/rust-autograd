@@ -10,7 +10,7 @@ pub struct SGD{
 }
 
 impl SGD{
-    pub fn new(rate: f32, var: Vec<Variable>){
+    pub fn new(rate: f32, var: Vec<Variable>) -> Self{
         SGD{rate:rate, variables:var}
     }
 }
