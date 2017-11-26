@@ -1,5 +1,6 @@
 use std::ops;
 use std::fmt;
+use std::iter;
 use std::sync::{Arc, Mutex};
 
 #[derive(Clone)]
@@ -169,4 +170,14 @@ impl<'a> ops::Div<&'a Variable> for f32{
         Variable::from_data(data)
     }
 }
+
+// For iterators ------------------------------------------------
+impl<'a> iter::Sum<&'a Variable> for Variable{
+    fn sum<I: iter::Iterator<Item=&'a Variable>>(iter: I) -> Self{
+        let mut sum = Variable::new(0.0);
+        for var in iter{ sum = &sum + var; }
+        sum
+    }
+}
+
 
